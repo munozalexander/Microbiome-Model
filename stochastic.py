@@ -4,7 +4,7 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-from PIL import Image
+import time
 from copy import deepcopy
 
 
@@ -13,7 +13,7 @@ from copy import deepcopy
 homeostasis_flag:       the condition in which the model is being simulated,
                         as follows
                         * 0 : normal, healthy homeostasis
-                        * 1 : normal, healthy homeostatis presented with
+                        * 1 : normal, healthy homeostasis presented with
                         infection
                         * 2 : normal, healthy homeostasis plus wide-range
                         antibiotic treatment, followed by infection
@@ -190,12 +190,10 @@ if __name__ == "__main__":
     # homeostasis flags
     if homeostasis_flag == 0: #healthy
         init_bacteria()
-        print_tissue()
         record_patch_state()
         for current_time in range(time_steps):
             divide()
             death()
-            print_tissue()
             record_patch_state()
     elif homeostasis_flag == 1: #healthy, infection
         pass
@@ -216,5 +214,8 @@ if __name__ == "__main__":
     elif output_flag == 1: #heatmap animation
         fig = plt.figure()
         im = plt.matshow(tissue_patch_history[0], fignum=0)
+        plt.colorbar(im, ticks=[0,1,2,3,4])
         anim = animation.FuncAnimation(fig, heatmap_update, frames=time_steps, interval=100, blit=False)
+        fname = 'animations/' + time.strftime('%b%d_%H_%M_%S') + '.mp4'
+        anim.save(fname)
         plt.show()
